@@ -1,5 +1,5 @@
 # CS-153
-CS 153 PROJECT
+CS 153 PROJECT - Galois Field Calculator
 
 
 Eunice Angel D. Cruz 
