@@ -3,8 +3,7 @@ def print_menu():
 	print "1. A(x) + B(x)"
 	print "2. A(x) - B(x)"
 	print "3. A(x) x B(x)"
-	print "4. A(x) / B(x)"
-	print "5. Quit\n"
+	print "4. Quit\n"
 
 def add_zero(a, b):
 
@@ -99,188 +98,202 @@ def add_or_sub(input1, input2):
 
 	return final_elements[::-1]
 
+def reduce(result, input3, len_3):
+
+		x = len(result) - len_3
+		input3 = ''.join(input3)
+		input3 = ''.join((input3, x*'0'))
+		result = xor(result, input3)
+
+		result = int(result)
+		result = str(result)
+
+		return result
+
 def multiply_per_coefficient(input1, input2, input3):
 
-	'''
-	gawing lists ang inputs
-	'''
-	input1 = input1.split()
-	input2 = input2.split()
-	input3 = input3.split()
+    '''
+    gawing lists ang inputs
+    '''
+    input1 = input1.split()
+    input2 = input2.split()
+    input3 = input3.split()
 
-	'''
-	kunin lengths
-	'''
-	len_1 = len(input1)
-	len_2 = len(input2)
-	len_3 = len(input3)
+    '''
+    kunin lengths
+    '''
+    len_1 = len(input1)
+    len_2 = len(input2)
+    len_3 = len(input3)
 
-	m = len_3 - 1
+    m = len_3 - 1
 
-	input1, input2 = add_zero(input1, input2)
+    input1, input2 = add_zero(input1, input2)
 
-	maxlen = max(len_1, len_2)
+    maxlen = max(len_1, len_2)
 
-	i = maxlen - 1
+    i = maxlen - 1
 
-	while i >= 0:
-		#print int(input1[i]), "^", int(input2[i])
-		bin_1 = bin(int(input1[i]))
-		bin_2 = bin(int(input2[i]))
-		bin_1 = bin_1[2:]
-		bin_2 = bin_2[2:]
-		bin_1, bin_2 = add_zero_in_bin(bin_1, bin_2)
+    while i >= 0:
+        #print int(input1[i]), "^", int(input2[i])
+        bin_1 = bin(int(input1[i]))
+        bin_2 = bin(int(input2[i]))
+        bin_1 = bin_1[2:]
+        bin_2 = bin_2[2:]
+        bin_1, bin_2 = add_zero_in_bin(bin_1, bin_2)
 
-		value = len(bin_1) - 1
+        #print bin_1
+        #print bin_2
 
-		temp_list = []
-		temp_list1 = []
-		temp_list2 = []
+        value = len(bin_1) - 1
 
-		for each in bin_2[::-1]:
-			temp = ""
-			for one in bin_1:
-				e = int(each) * int(one)
-				temp = temp + str(e)
-			temp_list.append(temp)
+        temp_list = []
+        temp_list1 = []
+        temp_list2 = []
 
-		for each in temp_list[::-1]:
-			each = ''.join((each, value*"0"))
-			temp_list1.append(each)
-			value -= 1
+        for each in bin_2[::-1]:
+            temp = ""
+            for one in bin_1:
+                e = int(each) * int(one)
+                temp = temp + str(e)
+            temp_list.append(temp)
 
-		value = len(bin_1) - 1
+        for each in temp_list[::-1]:
+            each = ''.join((each, value*"0"))
+            temp_list1.append(each)
+            value -= 1
 
-		for each in temp_list1[::-1]:
-			each = ''.join(( value*"0",each))
-			temp_list2.append(each)
-			value -= 1
+        value = len(bin_1) - 1
 
-		#xor temp_list2 elements
-		j = len(temp_list2) - 1
-		#print j
-		result = temp_list2[j]
+        for each in temp_list1[::-1]:
+            each = ''.join(( value*"0",each))
+            temp_list2.append(each)
+            value -= 1
 
-		while j > 0:
-			j -= 1
-			result = xor(result, temp_list2[j])
+        #print temp_list2
 
-		while len(result) >= len_3:
-			x = len(result) - len_3
-			input3 = ''.join(input3)
-			input3 = ''.join((input3, x*"0"))
-			result = xor(result, input3)
+        #xor temp_list2 elements
+        j = len(temp_list2) - 1
+        result = temp_list2[j]
 
-			k = 0
-			flag = 0
-			while result[k] == '0':
-				flag += 1
-				k += 1	
-			
-			result = result[flag:]
+        #print j
 
-		return bin_to_decimal(result)
-		i -= 1
+        while j > 0:
+        	#print result, "xor", temp_list2[j-1], "=",
+        	result = xor(result, temp_list2[j-1])
+        	j -= 1
+
+        result = int(result)
+        result = str(result)
+        #print result
+
+        i -= 1
+
+        while len(result) >= len_3:
+        	result = reduce(result, input3, len_3)
+
+        return bin_to_decimal(result)
 
 def mul_big_picture(a, b, c):
-    a = a.split()
-    b = b.split()
-    len_b = len(b)
+	a = a.split()
+	b = b.split()
+	len_a = len(a)
+	len_b = len(b)
+	final = ""
+	#answer = ""
+	temp = []
+	lines  = [] 
+	newlines = []
+	for i in b:
+	    for j in a[::-1]:
+	        #answer = "mult" + " " + i + " " + j 
+	        answer = multiply_per_coefficient(i, j, c)
+	        lines.insert(0, answer) #multiply_per_coefficient(i,j) = lines.append(line)
 
-    a, b = add_zero(a, b)
+	#print lines
+	if len(lines) == 1:
+		final = str(lines)[1:-1]
+		return " " + final
 
-    temp = []
-    lines  = [] 
-    newlines = []
-    for i in b:
-        for j in a[::-1]:
-            answer = multiply_per_coefficient(i, j, c)
-            lines.insert(0, answer) #multiply_per_coefficient(i,j) = lines.append(line)
+	else:
+		while lines:
+		    i = 0
+		    while i < len_a:
+		        line = lines.pop(0)
+		        temp.append(line)
+		        i += 1
+		    newlines.append(temp)
+		    temp = []
 
-    while lines:
-        i = 0
-        while i < len_b:
-            line = lines.pop(0)
-            temp.append(line)
-            i += 1
-        newlines.append(temp)
-        temp = []
+		#print newlines
 
-    if len(newlines) == 1:
-        final = newlines[0][0]
-        return final
+		#lagay 0s sa end
+		i = len_b - 1
+		max_trunc = i
 
-    else:
-        #lagay 0s sa start or end para same length
+		while max_trunc > 0:
+		    for each in newlines[::-1]:
+		        each.extend([0 for i in range(max_trunc)])
+		        max_trunc -= 1
 
-        i = len_b - 1
-        max_trunc = i
+		#lagay 0s sa start
+		i = 0
+		max_trunc = len_b- 1
+		newlines1 = []
+		while max_trunc > 0:
+		    for each in newlines:
+		        if max_trunc == 0:
+		            newlines1.append(each)
+		            break
+		        zero_list = [0]*max_trunc
+		        each = zero_list + each
+		        newlines1.append(each)
+		        max_trunc -= 1
 
-        while max_trunc > 0:
-            for each in newlines[::-1]:
-                each.extend([0 for i in range(max_trunc)])
-                max_trunc -= 1
+		for each in newlines1:
+			print " ", '  '.join(map(str, each))
 
-        i = 0
-        max_trunc = len_b - 1
-        newlines1 = []
-        while max_trunc > 0:
-            for each in newlines:
-                if max_trunc == 0:
-                    newlines1.append(each)
-                    break
-                zero_list = [0]*max_trunc
-                each = zero_list + each
-                newlines1.append(each)
-                max_trunc -= 1
+		j = 0
+		k = 0
+		
+		elem_len = len(newlines1[0])
 
-        k = 0
-        final = []
+		while k < elem_len:
+			solve = [ x[k] for x in newlines1]
 
-        while k < len(newlines1[0]):
-            
-            solve = [ x[k] for x in newlines1]
+			result = ""
+			j = len(solve) - 1
+			op1 = bin(solve[j])
+			op1 = op1[2:]
+			result = op1
 
-            result = ""
-            j = len(solve) - 1
-            op1 = bin(solve[j])
-            op1 = op1[2:]
-            result = op1
+			while j > 0:
+			    j -= 1
+			    op2 = bin(solve[j])
+			    op2 = op2[2:]
+			    result, op2 = add_zero_in_bin(result, op2)
+			    result = xor(result, op2)
+			k += 1
 
-            while j > 0:
-                j -= 1
-                op2 = bin(solve[j])
-                op2 = op2[2:]
-                result, op2 = add_zero_in_bin(result, op2)
-                result = xor(result, op2)
-            final.append(str(bin_to_decimal(result)))
+			final = final + " " + str(bin_to_decimal(result))
 
-            k += 1
-
-        mul_final_answer = ''.join(final)
-
-        l = 0
-        flag = 0
-        while mul_final_answer[l] == '0':
-            flag += 1
-            l += 1  
-        
-        mul_final_answer = mul_final_answer[flag:]
-
-        finale = ""
-        for each in mul_final_answer:
-            finale = finale + each + " "
-
-        return finale
-
+		return final
 
 while True:
 
 	print '\n',  30* "-", "M E N U", 30*"-", '\n'
-
 	input1 = raw_input("Enter A(x):")
 	input2 = raw_input("Enter B(x):")
 	input3 = raw_input("Enter P(x):")
+
+	import string
+	invalidChars = set(string.punctuation.replace("_", ""))
+
+	while (any(char in invalidChars for char in input1)) or (any(char in invalidChars for char in input2)) or (any(char in invalidChars for char in input3)):
+		print "\nwrong input format!\n"
+		input1 = raw_input("Enter A(x):")
+		input2 = raw_input("Enter B(x):")
+		input3 = raw_input("Enter P(x):")
 
 	print_menu()
 
@@ -288,7 +301,8 @@ while True:
 	print '\n'
 
 	if choice == 1:
-		print "A D D I T I O N\n"
+		print '\n', 26 * "-", "s o l u t i o n", 26*"-"
+		print "\nA D D I T I O N\n"
 
 		'''
 		gawing lists ang inputs
@@ -314,7 +328,6 @@ while True:
 		bool_answer = all(int(i) < max_value  for i in full_list)
 		
 		if bool_answer is False:
-			print '\n', 26 * "-", "s o l u t i o n", 26*"-"
 			print "Here are the given: "
 			print "\nA(x):", 
 			for i in input1:
@@ -324,7 +337,6 @@ while True:
 				print i,
 			print "\nAnswer: Maximum value in (A,B) is", max_value - 1, "for this P(x)"
 		else:
-			print '\n', 26 * "-", "s o l u t i o n", 26*"-"
 			print "Here are the given: "
 			print "\nA(x):", 
 			for i in input1:
@@ -354,7 +366,8 @@ while True:
 			print '\n'
 
 	elif choice == 2:
-		print "S U B T R A C T I O N\n"
+		print '\n', 26 * "-", "s o l u t i o n", 26*"-"
+		print "\nS U B T R A C T I O N\n"
 
 		'''
 		gawing lists ang inputs
@@ -380,7 +393,6 @@ while True:
 		bool_answer = all(int(i) < max_value  for i in full_list)
 		
 		if bool_answer is False:
-			print '\n', 26 * "-", "s o l u t i o n", 26*"-"
 			print "Here are the given: "
 			print "\nA(x):", 
 			for i in input1:
@@ -390,7 +402,6 @@ while True:
 				print i,
 			print "\nAnswer: Maximum value in (A,B) is", max_value - 1, "for this P(x)"
 		else:
-			print '\n', 26 * "-", "s o l u t i o n", 26*"-"
 			print "Here are the given: "
 			print "\nA(x):", 
 			for i in input1:
@@ -420,8 +431,8 @@ while True:
 			print '\n'
 
 	elif choice == 3:
-
-		print "M U L T I P L I C A T I O N\n"
+		print '\n', 26 * "-", "s o l u t i o n", 26*"-"
+		print "\nM U L T I P L I C A T I O N\n"
 
 		'''
 		gawing lists ang inputs
@@ -451,7 +462,6 @@ while True:
 		input3 = ' '.join(input3)
 
 		if bool_answer is False:
-			print '\n', 26 * "-", "s o l u t i o n", 26*"-"
 			print "Here are the given: "
 			print "\nA(x):", 
 			for i in input1:
@@ -461,7 +471,6 @@ while True:
 				print i,
 			print "\nAnswer: Maximum value in (A,B) is", max_value - 1, "for this P(x)"
 		else:
-			print '\n', 26 * "-", "s o l u t i o n", 26*"-"
 			print "Here are the given: "
 			print "\nA(x):", 
 			for i in input1:
@@ -472,7 +481,6 @@ while True:
 			print "\nP(x):",
 			for i in input3:
 				print i,
-			final = mul_big_picture(input1, input2, input3)
 
 			print "\n\n ", 
 			for i in input1:
@@ -480,15 +488,24 @@ while True:
 			print "\nx",
 			for i in input2:
 				print i,
-			print "\n ", m*3*'-'
-			print " ", 
-			for i in final:
-				print i,
+			print "\n ", m*6*'-'
+
+			final = mul_big_picture(input1, input2, input3)
+			if len(final) == 2:
+				print " " + final
+			else:
+				print " ", m*6*'-'
+				for i in final:
+					print i,
 			print '\n'
 			print "\nTherefore, the result for this operation with \nthe given A(x) and B(x) above is:",
 			for i in final:
 				print i,
 			print '\n'
 	
-	elif choice == 5:
+	elif choice == 4:
+		print "...G O O D B Y E !..."
 		exit()
+
+	else:
+		raw_input("Wrong option selection. Enter any key to try again..")
