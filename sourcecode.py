@@ -289,7 +289,7 @@ while True:
 	import string
 	invalidChars = set(string.punctuation.replace("_", ""))
 
-	while (any(char in invalidChars for char in input1)) or (any(char in invalidChars for char in input2)) or (any(char in invalidChars for char in input3)):
+	while (any(char in invalidChars for char in input1)) or (any(char in invalidChars for char in input2)) or (any(char in invalidChars for char in input3)) or any(c.isalpha() for c in input1) or any(c.isalpha() for c in input2) or any(c.isalpha() for c in input3):
 		print "\nwrong input format!\n"
 		input1 = raw_input("Enter A(x):")
 		input2 = raw_input("Enter B(x):")
